@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{{ course.title }} - Skillia{% endblock %}
+
+{% block content %}
+<div class="bg-[#f0f3f8] px-4 sm:px-8 md:px-20 lg:px-36 pb-20 pt-6 font-headline overflow-x-hidden">
+    {% include "partials/header_landing.html" %}
+
+    <div class="mt-10 md:mt-15">
+        <section class="relative w-full mb-10 md:mb-16">
+            <div class="relative overflow-hidden rounded-xl bg-indigo-900 shadow-2xl">
+                <img src="{{ course.image_url }}" class="w-full h-48 sm:h-72 md:h-96 lg:h-128 object-cover rounded-t-lg" alt="{{ course.title }}" />
+                <div class="absolute inset-0 bg-linear-to-t from-indigo-950/80 to-transparent flex flex-col justify-end p-5 md:p-8 lg:p-12">
+                    <p class="text-white mb-3 text-xs font-label tracking-widest uppercase">{{ course.category }}</p>
+                    <h1 class="text-white font-headline font-extrabold text-2xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight leading-tight mb-4 max-w-4xl">{{ course.title }}</h1>
+                    <div class="flex flex-wrap items-center gap-3 md:gap-6">
+                        <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/10">
+                            <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/star.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-yellow-400"></span>
+                            <span class="text-white font-bold text-sm">{{ course.rating }}</span>
+                            <span class="text-white/60 text-xs">(2.4k reseñas)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/user.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-white"></span>
+                            <div>
+                                <p class="text-white/60 text-xs font-label tracking-wider uppercase">Instructor</p>
+                                <p class="text-white font-semibold text-sm">{{ course.instructor }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="flex flex-col lg:flex-row gap-8 lg:gap-15 items-start">
+            <section class="w-full lg:w-[70%]">
+                <section class="p-5 md:p-8 bg-white rounded-2xl">
+                    <h5 class="text-xl md:text-2xl font-bold text-text">Sobre este curso</h5>
+                    <p class="whitespace-pre-line text-text-secondary font-semibold mt-3 text-sm md:text-base">{{ course.description }}</p>
+                </section>
+
+                <section class="mt-10 md:mt-20">
+                    <h5 class="text-xl md:text-2xl font-bold text-text mb-6 md:mb-10">Temario del curso</h5>
+                    {% for module in course.modules.all %}
+                    <details class="mb-4 border border-gray-200 rounded-xl bg-white">
+                        <summary class="w-full flex justify-between items-center p-4 font-semibold text-left text-base md:text-xl cursor-pointer list-none">
+                            <span class="flex items-center gap-2 pr-4">
+                                <span class="bg-purple-100 px-2 rounded-full text-sm md:text-base text-primary shrink-0">{{ forloop.counter }}</span>
+                                <span>{{ module.title }}</span>
+                            </span>
+                        </summary>
+                        <ul class="px-4 pb-4">
+                            {% for lesson in module.lessons.all %}
+                            <li class="flex justify-between items-center py-4 md:py-6 border-b border-gray-100 gap-4">
+                                <div class="flex gap-3 items-center min-w-0">
+                                    <span class="inline-block w-4 h-4 shrink-0 [mask-image:url('{% static "icons/circle-play.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text"></span>
+                                    <span class="text-sm md:text-base truncate">{{ lesson.title }}</span>
+                                </div>
+                                <span class="text-sm shrink-0 text-text-secondary">{{ lesson.duration }} min</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </details>
+                    {% endfor %}
+                </section>
+            </section>
+
+            <section class="bg-white rounded-2xl w-full lg:w-[30%] p-6 md:p-10 lg:sticky lg:top-6">
+                <div class="flex gap-2 font-semibold text-2xl md:text-3xl">
+                    <p class="line-through text-text-secondary">${{ course.price|intcomma }}</p>
+                    <p>$0</p>
+                </div>
+
+                {% if not request.user.is_authenticated %}
+                <a href="{% url 'login' %}?next={{ request.path }}" class="block text-center bg-primary px-5 w-full rounded-2xl py-3 text-white font-bold mt-5 hover:bg-purple-900 transition-colors">
+                    Inscribirse Ahora
+                </a>
+                {% elif is_enrolled %}
+                <a href="{% url 'course_player' course.pk %}" class="block text-center bg-primary px-5 w-full rounded-2xl py-3 text-white font-bold mt-5 hover:bg-purple-900 transition-colors">
+                    Continuar Curso
+                </a>
+                {# TODO: cambiar a course_player cuando exista #}
+                {% else %}
+                <form method="post" action="{% url 'course_enroll' course.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-primary px-5 w-full rounded-2xl py-3 text-white font-bold mt-5 hover:bg-purple-900 hover:cursor-pointer transition-colors">
+                        Inscribirse Ahora
+                    </button>
+                </form>
+                {% endif %}
+
+                <p class="text-center mt-3 font-semibold text-text-secondary text-sm">Garantía de Devolución de 30 días</p>
+                <div class="space-y-4 mt-8">
+                    <div class="flex items-center gap-3 text-sm">
+                        <span class="inline-block w-4 h-4 shrink-0 [mask-image:url('{% static "icons/clock.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                        <p class="font-medium text-text-secondary">Duración: 24 horas de contenido</p>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm">
+                        <span class="inline-block w-4 h-4 shrink-0 [mask-image:url('{% static "icons/badge-check.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                        <p class="font-medium text-text-secondary">Certificado de finalización</p>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm">
+                        <span class="inline-block w-4 h-4 shrink-0 [mask-image:url('{% static "icons/infinity.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                        <p class="font-medium text-text-secondary">Acceso de por vida</p>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm">
+                        <span class="inline-block w-4 h-4 shrink-0 [mask-image:url('{% static "icons/smartphone.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                        <p class="font-medium text-text-secondary">Acceso en dispositivos móviles</p>
+                    </div>
+                </div>
+                <div class="h-0.5 bg-gray-100 mt-5"></div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

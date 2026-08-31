@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Iniciar Sesión - Skillia{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col">
+    <div class="grow bg-[#f0f3f8] px-10 md:px-36 pt-15 font-headline">
+        <div class="flex flex-1 items-center flex-col">
+            <div class="text-center mb-20">
+                <h4 class="text-5xl text-primary font-black">Skillia</h4>
+                <p class="text-text-muted">Plataforma digital para mentes elevadas.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-10">
+                <p class="text-2xl text-text font-semibold">Bienvenido de Nuevo</p>
+                <p class="text-sm text-text-muted font-bold mb-8">Ingresa tus credenciales para continuar tu aprendizaje.</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="flex flex-col mb-5">
+                        <span class="text-text-muted text-sm font-bold flex items-center gap-2">
+                            <span class="inline-block w-3.5 h-3.5 [mask-image:url('{% static "icons/mail.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+                            CORREO ELECTRONICO
+                        </span>
+                        <input
+                            type="email"
+                            name="{{ form.username.html_name }}"
+                            class="bg-gray-100 rounded-lg py-3 px-3 focus:border-primary focus:border-2 focus:outline-none"
+                            placeholder="nombre@ejemplo.com"
+                            required
+                        />
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-text-muted text-sm font-bold flex items-center gap-2">
+                            <span class="inline-block w-3.5 h-3.5 [mask-image:url('{% static "icons/key.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+                            CONTRASEÑA
+                        </span>
+                        <input
+                            type="password"
+                            name="{{ form.password.html_name }}"
+                            class="bg-gray-100 rounded-lg py-3 px-3 focus:border-primary focus:border-2 focus:outline-none"
+                            placeholder="●●●●●●●●●"
+                            required
+                        />
+                    </div>
+
+                    {% if form.errors %}
+                    <p class="mt-5 text-red-600 font-bold">Correo o contraseña incorrectos</p>
+                    {% endif %}
+
+                    <button type="submit" class="bg-primary rounded-lg w-full py-3 text-white font-semibold mb-5 mt-5">
+                        Iniciar Sesion
+                    </button>
+                </form>
+
+                <p>
+                    No tienes una cuenta?
+                    <a href="/accounts/signup/" class="text-primary font-bold">Registrate ahora</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

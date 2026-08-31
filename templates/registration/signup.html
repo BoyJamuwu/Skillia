@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Cuenta - Skillia{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col">
+    <div class="bg-[#f0f3f8] grid grid-cols-1 md:grid-cols-2 gap-8 md:px-36 pt-15 items-center font-headline grow">
+        <div class="md:flex flex-col justify-center space-y-8">
+            <div class="space-y-4">
+                <h1 class="text-5xl font-black tracking-tighter text-primary">Academia de Cristal</h1>
+                <p class="text-text text-xl">
+                    Donde la claridad visual se encuentra con el <br /> aprendizaje de
+                    alto rendimiento. Únete a la <br /> comunidad de curaduría digital
+                    más sofisticada.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white p-6 rounded-xl flex flex-col gap-3">
+                    <span class="inline-block w-6 h-6 [mask-image:url('{% static "icons/square-star.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                    <h3 class="font-bold text-lg">Curaduría Premium</h3>
+                    <p class="text-sm">Contenido seleccionado por expertos de la industria.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl flex flex-col gap-3">
+                    <span class="inline-block w-6 h-6 [mask-image:url('{% static "icons/medal.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                    <h3 class="font-bold text-lg">Certificación</h3>
+                    <p class="text-sm">Valida tus habilidades con estándares globales.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-[#f0f3f8] px-10 md:px-36 pt-15 font-headline">
+            <div class="flex flex-1 items-center flex-col">
+                <div class="bg-white rounded-2xl p-10">
+                    <p class="text-2xl text-text font-semibold">CREAR CUENTA</p>
+                    <p class="text-sm text-text-muted font-bold mb-8">Comienza tu viaje educativo hoy mismo.</p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="flex flex-col mb-5">
+                            <span class="text-text-muted text-sm font-bold flex items-center gap-2 mb-2">
+                                <span class="inline-block w-3.5 h-3.5 [mask-image:url('{% static "icons/user.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+                                NOMBRE COMPLETO
+                            </span>
+                            <input type="text" name="{{ form.full_name.html_name }}"
+                                class="bg-gray-100 rounded-lg py-3 px-3 focus:border-primary focus:border-2 focus:outline-none"
+                                placeholder="Pepito Perez" required />
+                        </div>
+                        <div class="flex flex-col mb-5">
+                            <span class="text-text-muted text-sm font-bold flex items-center gap-2 mb-2">
+                                <span class="inline-block w-3.5 h-3.5 [mask-image:url('{% static "icons/mail.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+                                CORREO ELECTRONICO
+                            </span>
+                            <input type="email" name="{{ form.email.html_name }}"
+                                class="bg-gray-100 rounded-lg py-3 px-3 focus:border-primary focus:border-2 focus:outline-none"
+                                placeholder="nombre@ejemplo.com" required />
+                        </div>
+                        <div class="flex flex-col mb-5">
+                            <span class="text-text-muted text-sm font-bold flex items-center gap-2 mb-2">
+                                <span class="inline-block w-3.5 h-3.5 [mask-image:url('{% static "icons/key.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+                                CONTRASEÑA
+                            </span>
+                            <input type="password" name="{{ form.password1.html_name }}"
+                                class="bg-gray-100 rounded-lg py-3 px-3 focus:border-primary focus:border-2 focus:outline-none"
+                                placeholder="●●●●●●●●●" required />
+                        </div>
+                        <div class="flex flex-col mb-10">
+                            <span class="text-text-muted text-sm font-bold flex items-center gap-2 mb-2">CONFIRMAR CONTRASEÑA</span>
+                            <input type="password" name="{{ form.password2.html_name }}"
+                                class="bg-gray-100 rounded-lg py-3 px-3 focus:border-primary focus:border-2 focus:outline-none"
+                                placeholder="●●●●●●●●●" required />
+                        </div>
+
+                        {% if form.errors %}
+                        <p class="mt-5 text-red-600 font-bold">
+                            {% for field in form %}{% for error in field.errors %}{{ error }} {% endfor %}{% endfor %}
+                        </p>
+                        {% endif %}
+
+                        <button type="submit" class="bg-primary rounded-lg w-full py-3 text-white font-semibold mb-5 mt-5">
+                            Registrarse
+                        </button>
+                    </form>
+
+                    <p>
+                        Tienes una cuenta?
+                        <a href="/accounts/login/" class="text-primary font-bold">Inicia sesion ahora</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

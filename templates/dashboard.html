@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Dashboard - Skillia{% endblock %}
+
+{% block content %}
+<div class="bg-[#f0f3f8] px-4 sm:px-8 md:px-20 lg:px-36 pb-20 pt-6 font-headline overflow-x-hidden">
+    {% include "partials/header_landing.html" %}
+
+    <section class="pt-10 pb-10">
+        <p class="text-primary font-bold">Panel de Control</p>
+        <h4 class="text-text text-4xl font-bold">Hola, {{ request.user.first_name|default:request.user.email }} ✨</h4>
+        <p class="text-text-secondary">Es un gran dia para aprender algo nuevo.</p>
+    </section>
+
+    <section>
+        <p class="text-text text-4xl font-bold mb-8">Mis Cursos Activos</p>
+
+        {% if courses_data %}
+        <div class="gap-8 flex flex-col">
+            {% for item in courses_data %}
+            <section class="bg-white rounded-2xl p-5 md:p-7 flex flex-col sm:flex-row gap-5 sm:gap-6 items-start sm:items-center justify-between">
+                <div class="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full sm:w-auto">
+                    <img src="{{ item.course.image_url }}" alt="{{ item.course.title }}"
+                        class="w-full sm:w-48 md:w-64 lg:w-80 h-44 sm:h-36 md:h-40 lg:h-48 rounded-xl object-cover shrink-0" />
+
+                    <div class="flex flex-col justify-center gap-3 min-w-0">
+                        <p class="text-lg md:text-xl lg:text-2xl font-semibold text-text truncate">{{ item.course.title }}</p>
+
+                        {% if item.last_lesson %}
+                        <p class="text-sm md:text-base font-semibold text-text-secondary truncate">
+                            Última lección: {{ item.last_lesson.title }}
+                        </p>
+                        {% endif %}
+
+                        <div class="w-full max-w-xs">
+                            <div class="flex justify-between text-xs md:text-sm text-gray-500 mb-1">
+                                <span>Progreso</span>
+                                <span>{{ item.percentage }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary h-2.5 rounded-full transition-all duration-500" style="width: {{ item.percentage }}%"></div>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1">{{ item.completed_count }} de {{ item.total_lessons }} lecciones</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full sm:w-auto shrink-0">
+                    <a href="{% url 'course_player' item.course.pk %}"
+                        class="bg-primary block text-center sm:inline-block rounded-xl px-5 py-3 text-white font-semibold hover:bg-purple-900 transition-colors whitespace-nowrap">
+                        Continuar →
+                    </a>
+                </div>
+            </section>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="py-20 flex flex-col items-center text-center">
+            <span class="inline-block w-10 h-10 mb-3 [mask-image:url('{% static "icons/book-marked.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+            <p class="text-lg font-semibold text-text">No estás inscrito a ningún curso</p>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

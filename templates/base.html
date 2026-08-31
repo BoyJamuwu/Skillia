@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Skillia{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#702ae1',
+                        secondary: '#702ae1',
+                        accent: '#b80438',
+                        background: '#f5f7f9',
+                        surface: '#ffffff',
+                        text: '#2c2f31',
+                        'text-secondary': '#595c5e',
+                        'text-muted': '#6b7280',
+                        'btn-primary': '#702ae1',
+                        'btn-primary-text': '#ffffff',
+                        'btn-secondary': '#eef2ff',
+                        'btn-secondary-text': '#702ae1',
+                    },
+                    fontFamily: {
+                        headline: ['Manrope', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="font-body">
+    {% block content %}{% endblock %}
+
+    <footer class="bg-[#f0f3f8] border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-20 lg:px-36 py-10 font-headline text-sm">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="text-center md:text-left">
+                    <div class="font-bold text-primary text-xl mb-1">Academia de Cristal</div>
+                    <p class="text-text-muted">© 2025 Academia de Cristal. Todos los derechos reservados.</p>
+                </div>
+                <div class="flex flex-wrap justify-center gap-6">
+                    <a href="#" class="text-text-muted hover:text-primary transition-colors">Privacidad</a>
+                    <a href="#" class="text-text-muted hover:text-primary transition-colors">Términos</a>
+                    <a href="#" class="text-text-muted hover:text-primary transition-colors">Soporte</a>
+                    <a href="#" class="text-text-muted hover:text-primary transition-colors">Blog</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
