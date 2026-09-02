@@ -33,25 +33,68 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Modales del footer: el <dialog> nativo se centra solo con margin auto. */
+        dialog.modal-panel {
+            margin: auto;
+            width: calc(100% - 2rem);
+            max-width: 42rem;
+            border: 0;
+            border-radius: 1rem;
+            background-color: #ffffff;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .35);
+            padding: 0;
+        }
+
+        dialog.modal-panel::backdrop {
+            background-color: rgba(15, 23, 42, .55);
+        }
+
+        dialog.modal-panel[open] {
+            animation: modal-in .18s ease-out;
+        }
+
+        /* Evita el scroll de fondo mientras hay un modal abierto. */
+        body:has(dialog.modal-panel[open]) {
+            overflow: hidden;
+        }
+
+        @keyframes modal-in {
+            from { opacity: 0; transform: translateY(.75rem) scale(.98); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            dialog.modal-panel[open] { animation: none; }
+        }
+    </style>
 </head>
 <body class="font-body">
     {% block content %}{% endblock %}
 
-    <footer class="bg-[#f0f3f8] border-t border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-20 lg:px-36 py-10 font-headline text-sm">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
-                <div class="text-center md:text-left">
-                    <div class="font-bold text-primary text-xl mb-1">Academia de Cristal</div>
-                    <p class="text-text-muted">© 2025 Academia de Cristal. Todos los derechos reservados.</p>
-                </div>
-                <div class="flex flex-wrap justify-center gap-6">
-                    <a href="#" class="text-text-muted hover:text-primary transition-colors">Privacidad</a>
-                    <a href="#" class="text-text-muted hover:text-primary transition-colors">Términos</a>
-                    <a href="#" class="text-text-muted hover:text-primary transition-colors">Soporte</a>
-                    <a href="#" class="text-text-muted hover:text-primary transition-colors">Blog</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    {% include "partials/footer.html" %}
+
+    <script>
+    document.addEventListener("click", function (event) {
+        const opener = event.target.closest("[data-modal-open]");
+        if (opener) {
+            const dialog = document.getElementById(opener.dataset.modalOpen);
+            if (dialog) dialog.showModal();
+            return;
+        }
+
+        const closer = event.target.closest("[data-modal-close]");
+        if (closer) {
+            closer.closest("dialog").close();
+        }
+    });
+
+    // Cerrar al hacer click fuera del panel (el click cae sobre el propio <dialog>).
+    document.querySelectorAll("dialog.modal-panel").forEach(function (dialog) {
+        dialog.addEventListener("click", function (event) {
+            if (event.target === dialog) dialog.close();
+        });
+    });
+    </script>
 </body>
 </html>

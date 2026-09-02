@@ -1,0 +1,285 @@
+{% load static %}
+
+<footer class="bg-[#f0f3f8] border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-20 lg:px-36 py-10 font-headline text-sm">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <div class="font-bold text-primary text-xl mb-1">Skillia</div>
+                <p class="text-text-muted">© 2025 Skillia. Todos los derechos reservados.</p>
+            </div>
+            <nav class="flex flex-wrap justify-center gap-x-6 gap-y-3">
+                <button type="button" data-modal-open="modal-privacidad"
+                    class="text-text-muted hover:text-primary transition-colors cursor-pointer">
+                    Privacidad
+                </button>
+                <button type="button" data-modal-open="modal-terminos"
+                    class="text-text-muted hover:text-primary transition-colors cursor-pointer">
+                    Términos
+                </button>
+                <button type="button" data-modal-open="modal-soporte"
+                    class="text-text-muted hover:text-primary transition-colors cursor-pointer">
+                    Soporte
+                </button>
+            </nav>
+        </div>
+    </div>
+</footer>
+
+{# Modales del footer. Usan <dialog> nativo: el navegador se encarga de Esc y del foco. #}
+
+<dialog id="modal-privacidad" class="modal-panel" aria-labelledby="modal-privacidad-title">
+    <div class="flex flex-col max-h-[85vh]">
+        <div class="flex items-start justify-between gap-4 px-5 sm:px-8 py-5 border-b border-slate-200">
+            <div>
+                <h2 id="modal-privacidad-title" class="font-headline font-bold text-xl sm:text-2xl text-text">Política de Privacidad</h2>
+                <p class="text-xs text-text-muted mt-1">Última actualización: enero de 2025</p>
+            </div>
+            <button type="button" data-modal-close aria-label="Cerrar"
+                class="shrink-0 w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:bg-slate-100 hover:text-text transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="px-5 sm:px-8 py-6 overflow-y-auto space-y-6 text-sm leading-relaxed text-text-secondary">
+            <p>
+                En Skillia tratamos tus datos con el mismo cuidado con el que armamos nuestros cursos.
+                Este resumen explica, sin letra chica, qué guardamos y para qué.
+            </p>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">1. Qué información recopilamos</h3>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><span class="font-semibold text-text">Datos de cuenta:</span> tu nombre, tu correo electrónico y una contraseña que se guarda siempre cifrada.</li>
+                    <li><span class="font-semibold text-text">Datos de aprendizaje:</span> los cursos en los que te inscribes, las lecciones que completas y tu progreso.</li>
+                    <li><span class="font-semibold text-text">Datos técnicos:</span> el navegador y el dispositivo que usas, para detectar errores de reproducción.</li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">2. Para qué la usamos</h3>
+                <p>
+                    Para darte acceso a tus cursos, guardar tu progreso y que puedas retomar justo donde lo dejaste,
+                    emitir tus certificados y avisarte cuando se actualiza el contenido de un curso en el que estás inscrito.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">3. Con quién la compartimos</h3>
+                <p>
+                    No vendemos ni cedemos tus datos a terceros. Solo los compartimos con los proveedores
+                    necesarios para que la plataforma funcione: alojamiento, procesamiento de pagos y envío de correos.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">4. Cookies</h3>
+                <p>
+                    Usamos cookies propias para mantener tu sesión iniciada y recordar tus preferencias.
+                    No usamos cookies publicitarias ni de seguimiento entre sitios.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">5. Tus derechos</h3>
+                <p>
+                    Puedes acceder, corregir o eliminar tu cuenta y toda tu información cuando quieras escribiendo a
+                    <span class="font-semibold text-primary">privacidad@skillia.com</span>.
+                    Respondemos en un plazo máximo de 30 días.
+                </p>
+            </div>
+        </div>
+
+        <div class="px-5 sm:px-8 py-4 border-t border-slate-200 flex justify-end">
+            <button type="button" data-modal-close
+                class="bg-btn-primary text-btn-primary-text font-semibold px-6 py-2.5 rounded-xl hover:bg-purple-900 transition-colors cursor-pointer">
+                Entendido
+            </button>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="modal-terminos" class="modal-panel" aria-labelledby="modal-terminos-title">
+    <div class="flex flex-col max-h-[85vh]">
+        <div class="flex items-start justify-between gap-4 px-5 sm:px-8 py-5 border-b border-slate-200">
+            <div>
+                <h2 id="modal-terminos-title" class="font-headline font-bold text-xl sm:text-2xl text-text">Términos y Condiciones</h2>
+                <p class="text-xs text-text-muted mt-1">Vigentes desde enero de 2025</p>
+            </div>
+            <button type="button" data-modal-close aria-label="Cerrar"
+                class="shrink-0 w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:bg-slate-100 hover:text-text transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="px-5 sm:px-8 py-6 overflow-y-auto space-y-6 text-sm leading-relaxed text-text-secondary">
+            <p>
+                Al crear una cuenta en Skillia aceptas estas condiciones. Son las reglas que hacen que
+                la comunidad y el catálogo funcionen bien para todos.
+            </p>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">1. Tu cuenta</h3>
+                <p>
+                    Tu cuenta es personal e intransferible. Eres responsable de la actividad que ocurra en ella,
+                    así que cuida tu contraseña. Si detectas un acceso no autorizado, avísanos de inmediato.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">2. Acceso al contenido</h3>
+                <p>
+                    Al inscribirte en un curso recibes una licencia personal, limitada y no exclusiva para verlo
+                    dentro de la plataforma. No está permitido descargar, grabar, redistribuir, revender ni
+                    compartir el material con personas ajenas a tu cuenta.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">3. Pagos e inscripciones</h3>
+                <p>
+                    El precio de cada curso se muestra en su ficha antes de confirmar la inscripción.
+                    Los cursos gratuitos se activan al instante desde el catálogo. Puedes dar de baja tu
+                    suscripción cuando quieras y conservas el acceso hasta el final del período ya abonado.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">4. Certificados</h3>
+                <p>
+                    Emitimos el certificado automáticamente cuando completas el 100% de las lecciones de un curso.
+                    Acredita la finalización del curso en Skillia y no equivale a un título oficial ni a una
+                    habilitación profesional.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">5. Uso responsable</h3>
+                <p>
+                    No está permitido publicar contenido ofensivo, suplantar a otra persona ni intentar vulnerar
+                    la seguridad del servicio. Podemos suspender las cuentas que incumplan estas reglas.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">6. Cambios en el servicio</h3>
+                <p>
+                    Actualizamos, añadimos y retiramos cursos del catálogo periódicamente. Si un cambio afecta de
+                    forma relevante a un curso en el que estás inscrito, te avisamos por correo antes de aplicarlo.
+                </p>
+            </div>
+        </div>
+
+        <div class="px-5 sm:px-8 py-4 border-t border-slate-200 flex justify-end">
+            <button type="button" data-modal-close
+                class="bg-btn-primary text-btn-primary-text font-semibold px-6 py-2.5 rounded-xl hover:bg-purple-900 transition-colors cursor-pointer">
+                Entendido
+            </button>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="modal-soporte" class="modal-panel" aria-labelledby="modal-soporte-title">
+    <div class="flex flex-col max-h-[85vh]">
+        <div class="flex items-start justify-between gap-4 px-5 sm:px-8 py-5 border-b border-slate-200">
+            <div>
+                <h2 id="modal-soporte-title" class="font-headline font-bold text-xl sm:text-2xl text-text">Soporte</h2>
+                <p class="text-xs text-text-muted mt-1">Estamos para acompañarte durante todo el curso</p>
+            </div>
+            <button type="button" data-modal-close aria-label="Cerrar"
+                class="shrink-0 w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:bg-slate-100 hover:text-text transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="px-5 sm:px-8 py-6 overflow-y-auto space-y-6 text-sm leading-relaxed text-text-secondary">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-[#f0f3f8] rounded-2xl p-5">
+                    <div class="w-fit p-2.5 rounded-xl bg-primary mb-3">
+                        <span class="inline-block w-5 h-5 [mask-image:url('{% static "icons/mail.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-white"></span>
+                    </div>
+                    <p class="font-headline font-bold text-text">Escríbenos</p>
+                    <p class="text-primary font-semibold break-all">soporte@skillia.com</p>
+                    <p class="text-xs text-text-muted mt-1">Respondemos en 24 a 48 horas hábiles.</p>
+                </div>
+                <div class="bg-[#f0f3f8] rounded-2xl p-5">
+                    <div class="w-fit p-2.5 rounded-xl bg-[#2563eb] mb-3">
+                        <span class="inline-block w-5 h-5 [mask-image:url('{% static "icons/clock.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-white"></span>
+                    </div>
+                    <p class="font-headline font-bold text-text">Horario de atención</p>
+                    <p class="font-semibold text-text-secondary">Lunes a viernes, 9:00 a 18:00</p>
+                    <p class="text-xs text-text-muted mt-1">Los mensajes del fin de semana se responden el lunes.</p>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-3">Preguntas frecuentes</h3>
+                <div class="space-y-2">
+                    <details class="group bg-white border border-slate-200 rounded-xl px-4 py-3">
+                        <summary class="font-semibold text-text cursor-pointer list-none flex justify-between items-center gap-3">
+                            El video de una lección no carga
+                            <span class="text-primary text-lg leading-none group-open:hidden">+</span>
+                            <span class="text-primary text-lg leading-none hidden group-open:inline">−</span>
+                        </summary>
+                        <p class="mt-2">
+                            Recarga la página y revisa tu conexión. Si el problema sigue, prueba con otro navegador
+                            y escríbenos indicando el nombre del curso y de la lección para que podamos reproducirlo.
+                        </p>
+                    </details>
+                    <details class="group bg-white border border-slate-200 rounded-xl px-4 py-3">
+                        <summary class="font-semibold text-text cursor-pointer list-none flex justify-between items-center gap-3">
+                            ¿Cómo retomo un curso que dejé a medias?
+                            <span class="text-primary text-lg leading-none group-open:hidden">+</span>
+                            <span class="text-primary text-lg leading-none hidden group-open:inline">−</span>
+                        </summary>
+                        <p class="mt-2">
+                            Entra a tu Dashboard y abre el curso: el reproductor arranca en la primera lección
+                            que todavía no marcaste como completada.
+                        </p>
+                    </details>
+                    <details class="group bg-white border border-slate-200 rounded-xl px-4 py-3">
+                        <summary class="font-semibold text-text cursor-pointer list-none flex justify-between items-center gap-3">
+                            ¿Cuándo recibo mi certificado?
+                            <span class="text-primary text-lg leading-none group-open:hidden">+</span>
+                            <span class="text-primary text-lg leading-none hidden group-open:inline">−</span>
+                        </summary>
+                        <p class="mt-2">
+                            Apenas completas la última lección del curso. El progreso se guarda cuando el video
+                            termina, así que deja que llegue hasta el final.
+                        </p>
+                    </details>
+                    <details class="group bg-white border border-slate-200 rounded-xl px-4 py-3">
+                        <summary class="font-semibold text-text cursor-pointer list-none flex justify-between items-center gap-3">
+                            ¿Puedo cambiar mi correo o mi contraseña?
+                            <span class="text-primary text-lg leading-none group-open:hidden">+</span>
+                            <span class="text-primary text-lg leading-none hidden group-open:inline">−</span>
+                        </summary>
+                        <p class="mt-2">
+                            Sí. Escríbenos desde el correo con el que te registraste y hacemos el cambio
+                            después de verificar tu identidad.
+                        </p>
+                    </details>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-5 sm:px-8 py-4 border-t border-slate-200 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+            <a href="mailto:soporte@skillia.com"
+                class="text-center bg-btn-secondary text-btn-secondary-text font-semibold px-6 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors">
+                Enviar un correo
+            </a>
+            <button type="button" data-modal-close
+                class="bg-btn-primary text-btn-primary-text font-semibold px-6 py-2.5 rounded-xl hover:bg-purple-900 transition-colors cursor-pointer">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</dialog>
