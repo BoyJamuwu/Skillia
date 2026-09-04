@@ -78,6 +78,10 @@
     document.addEventListener("click", function (event) {
         const opener = event.target.closest("[data-modal-open]");
         if (opener) {
+            // Si el menú móvil está desplegado, ciérralo para que no quede detrás del modal.
+            const mobileMenu = document.getElementById("mobile-menu-toggle");
+            if (mobileMenu) mobileMenu.checked = false;
+
             const dialog = document.getElementById(opener.dataset.modalOpen);
             if (dialog) dialog.showModal();
             return;

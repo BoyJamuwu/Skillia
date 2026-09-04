@@ -5,13 +5,22 @@
     <div class="flex justify-between items-center px-4 py-3 md:px-8">
         <p class="text-secondary font-semibold text-2xl">Skillia</p>
 
-        <div class="hidden md:flex gap-12">
-            <a href="/" class="text-text-muted font-semibold font-headline">Inicio</a>
-            <a href="/courses/" class="text-text-muted font-semibold font-headline">Cursos</a>
+        <div class="hidden lg:flex gap-8 items-center">
+            <a href="/" class="text-text-muted font-semibold font-headline hover:text-primary transition-colors">Inicio</a>
+            <a href="/courses/" class="text-text-muted font-semibold font-headline hover:text-primary transition-colors">Cursos</a>
+            <a href="{% url 'teacher_list' %}" class="text-text-muted font-semibold font-headline hover:text-primary transition-colors">Docentes</a>
+            <button type="button" data-modal-open="modal-nosotros"
+                class="text-text-muted font-semibold font-headline hover:text-primary transition-colors cursor-pointer whitespace-nowrap">
+                Quiénes Somos
+            </button>
+            <button type="button" data-modal-open="modal-institucion"
+                class="text-text-muted font-semibold font-headline hover:text-primary transition-colors cursor-pointer">
+                Institución
+            </button>
         </div>
 
         {% if request.user.is_authenticated %}
-        <div class="hidden md:flex gap-6 items-center">
+        <div class="hidden lg:flex gap-6 items-center">
             <a href="{% url 'dashboard' %}" class="text-secondary font-semibold font-headline">Dashboard</a>
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
@@ -22,18 +31,21 @@
             </form>
         </div>
         {% else %}
-        <div class="hidden md:flex gap-6 items-center">
+        <div class="hidden lg:flex gap-6 items-center">
             <a href="{% url 'login' %}" class="text-secondary font-semibold font-headline">Iniciar Sesión</a>
             <a href="{% url 'signup' %}" class="bg-btn-primary px-6 py-2 rounded-lg text-btn-primary-text font-semibold font-headline">Registrarse</a>
         </div>
         {% endif %}
 
-        <label for="mobile-menu-toggle" class="md:hidden text-secondary text-2xl cursor-pointer">☰</label>
+        <label for="mobile-menu-toggle" class="lg:hidden text-secondary text-2xl cursor-pointer">☰</label>
     </div>
 
-    <div class="hidden peer-checked:flex flex-col gap-4 px-4 pb-4 md:hidden">
+    <div class="hidden peer-checked:flex flex-col gap-4 px-4 pb-4 lg:hidden">
         <a href="/" class="text-text-muted font-semibold">Inicio</a>
         <a href="/courses/" class="text-text-muted font-semibold">Cursos</a>
+        <a href="{% url 'teacher_list' %}" class="text-text-muted font-semibold">Docentes</a>
+        <button type="button" data-modal-open="modal-nosotros" class="text-text-muted font-semibold text-left">Quiénes Somos</button>
+        <button type="button" data-modal-open="modal-institucion" class="text-text-muted font-semibold text-left">Institución</button>
         {% if request.user.is_authenticated %}
         <a href="{% url 'dashboard' %}" class="text-secondary font-semibold">Dashboard</a>
         <form method="post" action="{% url 'logout' %}">
@@ -49,3 +61,205 @@
         {% endif %}
     </div>
 </header>
+
+{# Modales del navbar. Mismo patrón que los del footer: <dialog> nativo + data-modal-open/close. #}
+
+<dialog id="modal-nosotros" class="modal-panel" aria-labelledby="modal-nosotros-title">
+    <div class="flex flex-col max-h-[85vh]">
+        <div class="flex items-start justify-between gap-4 px-5 sm:px-8 py-5 border-b border-slate-200">
+            <div>
+                <h2 id="modal-nosotros-title" class="font-headline font-bold text-xl sm:text-2xl text-text">Quiénes Somos</h2>
+                <p class="text-xs text-text-muted mt-1">La gente y la idea detrás de la plataforma</p>
+            </div>
+            <button type="button" data-modal-close aria-label="Cerrar"
+                class="shrink-0 w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:bg-slate-100 hover:text-text transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="px-5 sm:px-8 py-6 overflow-y-auto space-y-6 text-sm leading-relaxed text-text-secondary">
+            <p>
+                Skillia nació en 2019 de una frustración muy concreta: había miles de horas de cursos
+                dando vueltas por internet y casi ninguna forma de saber cuáles valían la pena.
+                Armamos la plataforma que nos hubiera gustado tener cuando estábamos aprendiendo.
+            </p>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div class="bg-[#f0f3f8] rounded-2xl p-4 text-center">
+                    <p class="font-headline font-bold text-2xl text-primary">10k+</p>
+                    <p class="text-xs text-text-muted uppercase tracking-wider mt-1">Estudiantes</p>
+                </div>
+                <div class="bg-[#f0f3f8] rounded-2xl p-4 text-center">
+                    <p class="font-headline font-bold text-2xl text-primary">4.9/5</p>
+                    <p class="text-xs text-text-muted uppercase tracking-wider mt-1">Valoración</p>
+                </div>
+                <div class="bg-[#f0f3f8] rounded-2xl p-4 text-center col-span-2 sm:col-span-1">
+                    <p class="font-headline font-bold text-2xl text-primary">2019</p>
+                    <p class="text-xs text-text-muted uppercase tracking-wider mt-1">Desde</p>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">Nuestra misión</h3>
+                <p>
+                    Que aprender una habilidad nueva no dependa de dónde vives, cuánto tiempo libre tienes
+                    ni de si puedes pagar una carrera completa. Cursos cortos, ordenados y hechos por gente
+                    que trabaja de lo que enseña.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-3">En qué creemos</h3>
+                <div class="space-y-3">
+                    <div class="flex gap-3 items-start">
+                        <span class="inline-block w-5 h-5 mt-0.5 shrink-0 [mask-image:url('{% static "icons/circle-star.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                        <p><span class="font-semibold text-text">Poco y bueno.</span> Preferimos un catálogo chico y revisado antes que miles de cursos que nadie termina.</p>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <span class="inline-block w-5 h-5 mt-0.5 shrink-0 [mask-image:url('{% static "icons/clock.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                        <p><span class="font-semibold text-text">Tu ritmo manda.</span> Sin cohortes, sin fechas de entrega, sin perder el acceso. Vuelves cuando puedes y sigues donde quedaste.</p>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <span class="inline-block w-5 h-5 mt-0.5 shrink-0 [mask-image:url('{% static "icons/badge-check.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                        <p><span class="font-semibold text-text">Aprender haciendo.</span> Cada curso termina en algo que puedes mostrar, no solo en un video visto.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">El equipo</h3>
+                <p>
+                    Somos un equipo pequeño de desarrolladores, diseñadores y docentes repartidos por Latinoamérica.
+                    Cada curso pasa por una revisión pedagógica y otra técnica antes de publicarse, y volvemos a
+                    revisarlo cuando la tecnología que enseña cambia.
+                </p>
+            </div>
+        </div>
+
+        <div class="px-5 sm:px-8 py-4 border-t border-slate-200 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+            <a href="{% url 'course_list' %}"
+                class="text-center bg-btn-secondary text-btn-secondary-text font-semibold px-6 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors">
+                Ver los cursos
+            </a>
+            <button type="button" data-modal-close
+                class="bg-btn-primary text-btn-primary-text font-semibold px-6 py-2.5 rounded-xl hover:bg-purple-900 transition-colors cursor-pointer">
+                Entendido
+            </button>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="modal-institucion" class="modal-panel" aria-labelledby="modal-institucion-title">
+    <div class="flex flex-col max-h-[85vh]">
+        <div class="flex items-start justify-between gap-4 px-5 sm:px-8 py-5 border-b border-slate-200">
+            <div>
+                <h2 id="modal-institucion-title" class="font-headline font-bold text-xl sm:text-2xl text-text">Institución</h2>
+                <p class="text-xs text-text-muted mt-1">Datos institucionales y modelo académico</p>
+            </div>
+            <button type="button" data-modal-close aria-label="Cerrar"
+                class="shrink-0 w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:bg-slate-100 hover:text-text transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="px-5 sm:px-8 py-6 overflow-y-auto space-y-6 text-sm leading-relaxed text-text-secondary">
+            <p>
+                Skillia es una institución de formación continua en línea. Acá dejamos los datos formales
+                y cómo está organizado el aprendizaje, para que sepas exactamente qué estás cursando.
+            </p>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-3">Datos de la institución</h3>
+                <dl class="bg-[#f0f3f8] rounded-2xl p-5 space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                        <dt class="text-xs text-text-muted uppercase tracking-wider">Razón social</dt>
+                        <dd class="font-semibold text-text">Skillia Educación Digital SpA</dd>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                        <dt class="text-xs text-text-muted uppercase tracking-wider">Nombre de fantasía</dt>
+                        <dd class="font-semibold text-text">Skillia</dd>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                        <dt class="text-xs text-text-muted uppercase tracking-wider">Año de fundación</dt>
+                        <dd class="font-semibold text-text">2019</dd>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                        <dt class="text-xs text-text-muted uppercase tracking-wider">Domicilio</dt>
+                        <dd class="font-semibold text-text">Santiago, Chile</dd>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                        <dt class="text-xs text-text-muted uppercase tracking-wider">Contacto</dt>
+                        <dd class="font-semibold text-primary break-all">institucional@skillia.com</dd>
+                    </div>
+                </dl>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">Modelo académico</h3>
+                <p class="mb-3">
+                    Toda la formación es <span class="font-semibold text-text">100% en línea y asincrónica</span>.
+                    Cada curso se divide en módulos, y cada módulo en lecciones en video con material de apoyo.
+                </p>
+                <div class="space-y-3">
+                    <div class="flex gap-3 items-start">
+                        <span class="inline-block w-5 h-5 mt-0.5 shrink-0 [mask-image:url('{% static "icons/book-marked.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                        <p><span class="font-semibold text-text">Progresión por lección.</span> El avance se registra al terminar cada video, así que el reproductor siempre te devuelve al punto exacto donde quedaste.</p>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <span class="inline-block w-5 h-5 mt-0.5 shrink-0 [mask-image:url('{% static "icons/infinity.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                        <p><span class="font-semibold text-text">Acceso permanente.</span> Una vez inscrito, el curso queda disponible en tu Dashboard sin fecha de vencimiento.</p>
+                    </div>
+                    <div class="flex gap-3 items-start">
+                        <span class="inline-block w-5 h-5 mt-0.5 shrink-0 [mask-image:url('{% static "icons/medal.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
+                        <p><span class="font-semibold text-text">Certificación.</span> El certificado se emite automáticamente al completar el 100% de las lecciones.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">Alcance de los certificados</h3>
+                <p>
+                    Nuestros certificados acreditan la finalización de un curso dictado por Skillia en el marco
+                    de la formación continua. <span class="font-semibold text-text">No constituyen un título oficial
+                    ni una habilitación profesional</span>, y no reemplazan la formación entregada por
+                    universidades o institutos reconocidos por el Estado.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">Cuerpo docente</h3>
+                <p>
+                    Los instructores son profesionales en ejercicio con un mínimo de cinco años de experiencia
+                    en su área. Antes de publicar, cada programa pasa por una revisión pedagógica y una revisión
+                    técnica interna, y se actualiza cuando cambian las herramientas que enseña.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-headline font-bold text-base text-text mb-2">Convenios y planes para empresas</h3>
+                <p>
+                    Trabajamos con equipos que quieren capacitar a su gente con licencias grupales, seguimiento
+                    de avance y rutas de aprendizaje a medida. Escríbenos a
+                    <span class="font-semibold text-primary">institucional@skillia.com</span> y armamos una propuesta.
+                </p>
+            </div>
+        </div>
+
+        <div class="px-5 sm:px-8 py-4 border-t border-slate-200 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+            <a href="mailto:institucional@skillia.com"
+                class="text-center bg-btn-secondary text-btn-secondary-text font-semibold px-6 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors">
+                Contactar
+            </a>
+            <button type="button" data-modal-close
+                class="bg-btn-primary text-btn-primary-text font-semibold px-6 py-2.5 rounded-xl hover:bg-purple-900 transition-colors cursor-pointer">
+                Entendido
+            </button>
+        </div>
+    </div>
+</dialog>

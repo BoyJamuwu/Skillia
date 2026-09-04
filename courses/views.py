@@ -18,6 +18,10 @@ class CourseDetailView(DetailView):
     template_name = "courses/course_detail.html"
     context_object_name = "course"
 
+    def get_queryset(self):
+        # El temario recorre módulos y lecciones: sin prefetch son 1 + N consultas.
+        return Course.objects.select_related("teacher").prefetch_related("modules__lessons")
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
@@ -48,9 +52,7 @@ class CoursePlayerView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         course = self.object
-        all_lessons = list(
-            Lesson.objects.filter(module__course=course).select_related("module").order_by("module_id", "id")
-        )
+        all_lessons = list(Lesson.for_course(course).select_related("module"))
         completed_ids = set(
             Progress.objects.filter(user=self.request.user, lesson__in=all_lessons, completed=True)
             .values_list("lesson_id", flat=True)
@@ -86,7 +88,7 @@ class CompleteLessonView(LoginRequiredMixin, View):
         lesson = get_object_or_404(Lesson, pk=lesson_id, module__course_id=pk)
         Progress.objects.update_or_create(user=request.user, lesson=lesson, defaults={"completed": True})
 
-        all_lessons = list(Lesson.objects.filter(module__course_id=pk).order_by("module_id", "id"))
+        all_lessons = list(Lesson.for_course(pk))
         current_index = all_lessons.index(lesson)
         next_lesson = all_lessons[current_index + 1] if current_index + 1 < len(all_lessons) else None
 

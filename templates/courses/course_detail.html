@@ -25,7 +25,12 @@
                             <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/user.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-white"></span>
                             <div>
                                 <p class="text-white/60 text-xs font-label tracking-wider uppercase">Instructor</p>
-                                <p class="text-white font-semibold text-sm">{{ course.instructor }}</p>
+                                {% if course.teacher %}
+                                <a href="{% url 'teacher_detail' course.teacher.pk %}"
+                                    class="text-white font-semibold text-sm hover:underline">{{ course.teacher.full_name }}</a>
+                                {% else %}
+                                <p class="text-white/70 font-semibold text-sm">Por asignar</p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -94,7 +99,7 @@
                 <div class="space-y-4 mt-8">
                     <div class="flex items-center gap-3 text-sm">
                         <span class="inline-block w-4 h-4 shrink-0 [mask-image:url('{% static "icons/clock.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>
-                        <p class="font-medium text-text-secondary">Duración: 24 horas de contenido</p>
+                        <p class="font-medium text-text-secondary">Duración: {{ course.duration }} de contenido</p>
                     </div>
                     <div class="flex items-center gap-3 text-sm">
                         <span class="inline-block w-4 h-4 shrink-0 [mask-image:url('{% static "icons/badge-check.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-primary"></span>

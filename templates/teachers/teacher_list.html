@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Docentes - Skillia{% endblock %}
+
+{% block content %}
+<div class="bg-[#f0f3f8] px-4 sm:px-8 md:px-20 lg:px-36 pt-6 pb-30 font-headline overflow-x-hidden">
+    {% include "partials/header_landing.html" %}
+
+    <div class="mt-10 md:mt-15">
+        <p class="text-primary font-bold">Cuerpo docente</p>
+        <h1 class="text-4xl md:text-5xl font-bold mb-2">Quién te va a enseñar</h1>
+        <p class="text-sm font-bold text-text-secondary mb-10 max-w-2xl">
+            Profesionales en ejercicio que dedican parte de su semana a enseñar lo que
+            hacen todos los días. Cada ficha muestra su experiencia y los cursos que dicta.
+        </p>
+
+        {% if teachers %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
+            {% for teacher in teachers %}
+            <div class="bg-white rounded-2xl p-6 flex flex-col h-full shadow transition-transform duration-300 hover:scale-102 hover:translate-y-0.5">
+                <div class="flex items-center gap-4 mb-5">
+                    {% if teacher.photo_url %}
+                    <img src="{{ teacher.photo_url }}" alt="{{ teacher.full_name }}"
+                        class="w-16 h-16 rounded-full object-cover shrink-0" />
+                    {% else %}
+                    <div class="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-xl shrink-0">
+                        {{ teacher.initials }}
+                    </div>
+                    {% endif %}
+                    <div class="min-w-0">
+                        <h3 class="text-lg font-bold text-text truncate">{{ teacher.full_name }}</h3>
+                        <p class="text-sm text-text-secondary line-clamp-2">{{ teacher.headline }}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 text-sm mb-4">
+                    {% if teacher.specialty %}
+                    <span class="bg-primary rounded-2xl px-3 font-semibold text-white">{{ teacher.specialty }}</span>
+                    {% endif %}
+                    <div class="flex items-center gap-1 text-text">
+                        <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/star.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-yellow-400"></span>
+                        <span class="font-bold">{{ teacher.rating }}</span>
+                    </div>
+                </div>
+
+                <p class="text-sm text-text-secondary line-clamp-3 grow">{{ teacher.bio }}</p>
+
+                <div class="h-0.5 bg-gray-100 my-5"></div>
+
+                <div class="flex justify-between items-center text-sm">
+                    <div class="flex gap-4 text-text-secondary font-semibold">
+                        <span class="flex items-center gap-1.5">
+                            <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/book-marked.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+                            {{ teacher.courses_count }}
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/user.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+                            {{ teacher.students_count }}
+                        </span>
+                    </div>
+                    <a href="{% url 'teacher_detail' teacher.pk %}" class="text-primary font-bold">Ver perfil -&gt;</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="p-6 rounded-2xl flex flex-col items-center py-20">
+            <span class="inline-block w-10 h-10 mb-3 [mask-image:url('{% static "icons/user.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+            <p class="text-lg font-semibold mb-2 text-center text-text">Todavía no hay docentes cargados</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

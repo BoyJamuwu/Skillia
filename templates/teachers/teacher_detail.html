@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{{ teacher.full_name }} - Skillia{% endblock %}
+
+{% block content %}
+<div class="bg-[#f0f3f8] px-4 sm:px-8 md:px-20 lg:px-36 pt-6 pb-20 font-headline overflow-x-hidden">
+    {% include "partials/header_landing.html" %}
+
+    <div class="mt-8 md:mt-12">
+        <a href="{% url 'teacher_list' %}" class="text-sm font-semibold text-text-muted hover:text-primary transition-colors">
+            &lt;- Volver a Docentes
+        </a>
+
+        <section class="bg-white rounded-2xl p-6 md:p-10 mt-4 flex flex-col sm:flex-row gap-6 md:gap-10 items-start">
+            {% if teacher.photo_url %}
+            <img src="{{ teacher.photo_url }}" alt="{{ teacher.full_name }}"
+                class="w-28 h-28 md:w-40 md:h-40 rounded-2xl object-cover shrink-0" />
+            {% else %}
+            <div class="w-28 h-28 md:w-40 md:h-40 rounded-2xl bg-primary/15 flex items-center justify-center text-primary font-bold text-4xl shrink-0">
+                {{ teacher.initials }}
+            </div>
+            {% endif %}
+
+            <div class="min-w-0 w-full">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-text">{{ teacher.full_name }}</h1>
+                <p class="text-text-secondary font-semibold mt-1">{{ teacher.headline }}</p>
+
+                <div class="flex flex-wrap items-center gap-3 mt-4">
+                    {% if teacher.specialty %}
+                    <span class="bg-primary rounded-2xl px-3 py-0.5 text-sm font-semibold text-white">{{ teacher.specialty }}</span>
+                    {% endif %}
+                    <div class="flex items-center gap-1.5 text-sm">
+                        <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/star.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-yellow-400"></span>
+                        <span class="font-bold text-text">{{ teacher.rating }}</span>
+                        <span class="text-text-muted">valoración promedio</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 mt-6">
+                    <div class="bg-[#f0f3f8] rounded-2xl p-4 text-center">
+                        <p class="font-bold text-2xl text-primary">{{ teacher.years_experience }}</p>
+                        <p class="text-xs text-text-muted uppercase tracking-wider mt-1">Años de experiencia</p>
+                    </div>
+                    <div class="bg-[#f0f3f8] rounded-2xl p-4 text-center">
+                        <p class="font-bold text-2xl text-primary">{{ teacher.courses_count }}</p>
+                        <p class="text-xs text-text-muted uppercase tracking-wider mt-1">Cursos</p>
+                    </div>
+                    <div class="bg-[#f0f3f8] rounded-2xl p-4 text-center">
+                        <p class="font-bold text-2xl text-primary">{{ teacher.students_count }}</p>
+                        <p class="text-xs text-text-muted uppercase tracking-wider mt-1">Estudiantes</p>
+                    </div>
+                </div>
+
+                {% if teacher.email or teacher.linkedin_url %}
+                <div class="flex flex-wrap gap-3 mt-6">
+                    {% if teacher.email %}
+                    <a href="mailto:{{ teacher.email }}"
+                        class="flex items-center gap-2 bg-btn-secondary text-btn-secondary-text font-semibold px-5 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors text-sm">
+                        <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/mail.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-btn-secondary-text"></span>
+                        Escribir
+                    </a>
+                    {% endif %}
+                    {% if teacher.linkedin_url %}
+                    <a href="{{ teacher.linkedin_url }}" target="_blank" rel="noopener noreferrer"
+                        class="flex items-center gap-2 bg-btn-secondary text-btn-secondary-text font-semibold px-5 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors text-sm">
+                        <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/badge-check.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-btn-secondary-text"></span>
+                        LinkedIn
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        {% if teacher.bio %}
+        <section class="bg-white rounded-2xl p-6 md:p-8 mt-8">
+            <h2 class="text-xl md:text-2xl font-bold text-text mb-3">Sobre {{ teacher.full_name }}</h2>
+            <p class="whitespace-pre-line text-text-secondary font-semibold text-sm md:text-base">{{ teacher.bio }}</p>
+        </section>
+        {% endif %}
+
+        <section class="mt-10 md:mt-16">
+            <h2 class="text-xl md:text-2xl font-bold text-text mb-6">
+                Cursos que dicta
+                <span class="text-text-muted font-semibold">({{ teacher.courses_count }})</span>
+            </h2>
+
+            {% if courses %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+                {% for course in courses %}
+                <div class="rounded-xl shadow flex flex-col h-full transition-transform duration-300 hover:scale-102 hover:translate-y-0.5">
+                    <img src="{{ course.image_url }}" class="w-full h-48 object-cover rounded-t-lg shrink-0" alt="{{ course.title }}" />
+                    <div class="bg-white px-8 py-8 rounded-b-xl shadow flex flex-col flex-1">
+                        <div class="flex items-center gap-5 text-sm pb-3">
+                            <p class="bg-primary rounded-2xl px-3 font-semibold text-white">{{ course.category }}</p>
+                            <div class="flex items-center gap-1 text-text">
+                                <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/clock.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text"></span>
+                                <p>{{ course.duration }}</p>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-text mb-2">{{ course.title }}</h3>
+                        <p class="text-sm font-bold text-text-secondary mb-4 line-clamp-2">{{ course.description }}</p>
+
+                        <div class="h-0.5 bg-gray-100 mt-auto"></div>
+                        <div class="flex justify-between items-center mt-5">
+                            <div class="flex gap-2 font-semibold">
+                                <p class="line-through">${{ course.price|intcomma }}</p>
+                                <p>$0</p>
+                            </div>
+                            <a href="{% url 'course_detail' course.id %}" class="text-center text-primary font-bold">Ver Curso -&gt;</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="bg-white rounded-2xl py-16 flex flex-col items-center">
+                <span class="inline-block w-10 h-10 mb-3 [mask-image:url('{% static "icons/book-marked.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+                <p class="text-lg font-semibold text-text">Todavía no tiene cursos publicados</p>
+            </div>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}

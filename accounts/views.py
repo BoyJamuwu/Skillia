@@ -21,7 +21,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         courses_data = []
         for course in courses:
-            lessons = list(Lesson.objects.filter(module__course=course).order_by("module_id", "id"))
+            lessons = list(Lesson.for_course(course))
             total_lessons = len(lessons)
             completed_ids = set(
                 Progress.objects.filter(user=user, lesson__in=lessons, completed=True)

@@ -14,7 +14,9 @@ class ModuleInline(admin.TabularInline):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ("title", "category", "price", "rating")
+    list_display = ("title", "category", "teacher", "price", "rating")
+    list_select_related = ("teacher",)
+    list_filter = ("category", "teacher")
     inlines = [ModuleInline]
 
 
