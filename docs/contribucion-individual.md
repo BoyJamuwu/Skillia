@@ -4,10 +4,6 @@
 **Asignatura:** Programación Back End (TI2041) — Evaluación Sumativa 1
 **Modalidad:** Equipo de dos integrantes
 
-> Este registro se construyó a partir del historial de Git del repositorio, que es
-> verificable con `git log --author="<autor>" --stat`. Antes de entregar, cada integrante
-> debe revisar su sección, completar los campos marcados y confirmar que refleja su aporte real.
-
 ---
 
 ## Integrantes
@@ -87,12 +83,12 @@ ambos y permite que cada uno defienda un flujo completo de Django.
 
 | Área | Responsable |
 | --- | --- |
-| Configuración del proyecto y base de plantillas | Integrante 1 |
-| Autenticación y dashboard | Integrante 1 |
-| Modelos del dominio de cursos | Integrante 1, con extensión posterior del Integrante 2 |
-| Detalle de curso y reproductor | Integrante 1 |
-| Cuerpo docente | Integrante 2 |
-| Navegación (header y footer) | Integrante 2 |
-| Carga de datos y catálogo de ejemplo | Integrante 2 |
-| Filtros y ordenamiento del catálogo | Integrante 2 |
-| Configuración por entorno y documentación | Integrante 2 |
+| Configuración del proyecto y base de plantillas | Emilio Asencio |
+| Autenticación y dashboard | Emilio Asencio |
+| Modelos del dominio de cursos | Emilio Asencio |
+| Detalle de curso y reproductor | Emilio Asencio |
+| Cuerpo docente | Matias Garcia |
+| Navegación (header y footer) | Matias Garcia |
+| Carga de datos y catálogo de ejemplo | Matias Garcia |
+| Filtros y ordenamiento del catálogo | Matias Garcia |
+| Configuración por entorno y documentación | Matias Garcia |

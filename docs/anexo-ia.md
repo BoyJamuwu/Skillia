@@ -7,10 +7,6 @@ Este anexo se presenta según la instrucción 13 de la evaluación. Deja constan
 partes del proyecto se usó asistencia de IA, con qué instrucciones, qué tipo de apoyo se
 recibió y qué se revisó o modificó después.
 
-> **Pendiente de completar:** este anexo documenta las sesiones de trabajo con IA que
-> quedaron registradas. Si algún integrante utilizó otra herramienta o en otra parte del
-> proyecto, debe agregar su sesión antes de la entrega. El uso de IA no penaliza; omitirlo, sí.
-
 ---
 
 ## 1. Herramienta utilizada
