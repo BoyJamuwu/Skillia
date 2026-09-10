@@ -5,20 +5,193 @@
 {% block title %}Cursos - Skillia{% endblock %}
 
 {% block content %}
-<div class="bg-[#f0f3f8] px-10 md:px-36 pt-6 pb-30 font-headline">
+<div class="bg-[#f0f3f8] px-4 sm:px-8 md:px-20 lg:px-36 pt-6 pb-30 font-headline overflow-x-hidden">
     {% include "partials/header_landing.html" %}
 
-    <div class="flex mt-15">
-        <div class="md:w-1/5 hidden md:block">Filtro</div>
+    {# Un solo <form> GET envuelve el filtro lateral y el orden: todo viaja en la query string. #}
+    <form method="get" id="course-filters" class="flex flex-col md:flex-row gap-6 md:gap-10 mt-10 md:mt-15">
+
+        <div class="md:w-1/5 md:shrink-0">
+            {# Toggle solo-CSS del panel en móvil, mismo patrón que el menú del header. #}
+            <input type="checkbox" id="filters-toggle" class="hidden peer/filters" />
+            <label for="filters-toggle"
+                class="md:hidden flex items-center justify-between bg-white rounded-xl shadow px-5 py-3 mb-3 cursor-pointer">
+                <span class="font-bold text-text">Filtros</span>
+                <span class="flex items-center gap-2">
+                    {% if active_filters %}
+                    <span class="bg-primary text-white text-xs font-bold rounded-full px-2 py-0.5">{{ active_filters }}</span>
+                    {% endif %}
+                    <span class="text-text-muted">&#9662;</span>
+                </span>
+            </label>
+
+            <aside class="hidden peer-checked/filters:block md:block md:sticky md:top-6">
+                <div class="bg-white rounded-xl shadow p-6 space-y-7">
+
+                    <div class="flex items-center justify-between">
+                        <p class="text-lg font-bold text-text">Filtros</p>
+                        {% if active_filters %}
+                        <a href="{% url 'course_list' %}" class="text-xs font-bold text-primary hover:underline">Limpiar</a>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="filter-q" class="block text-xs font-bold uppercase tracking-wider text-text-muted mb-3">Buscar</label>
+                        <div class="relative">
+                            <input type="search" name="q" id="filter-q" value="{{ selected.q }}"
+                                placeholder="Curso, tema o docente"
+                                class="w-full bg-[#f0f3f8] rounded-lg pl-9 pr-3 py-2.5 text-sm text-text placeholder:text-text-muted outline-none focus:ring-2 focus:ring-primary/40" />
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <circle cx="11" cy="11" r="7" />
+                                <path d="m20 20-3.5-3.5" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-gray-100"></div>
+
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-text-muted mb-3">Categoría</p>
+                        <div class="space-y-2.5">
+                            {% for item in categories %}
+                            <label class="flex items-center gap-2.5 text-sm cursor-pointer group">
+                                <input type="checkbox" name="categoria" value="{{ item.category }}"
+                                    class="w-4 h-4 rounded accent-primary cursor-pointer shrink-0"
+                                    {% if item.category in selected.categories %}checked{% endif %} />
+                                <span class="text-text-secondary font-semibold group-hover:text-primary transition-colors truncate">{{ item.category }}</span>
+                                <span class="ml-auto text-xs text-text-muted">{{ item.total }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {% if teachers|length > 1 %}
+                    <div class="h-px bg-gray-100"></div>
+
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-text-muted mb-3">Docente</p>
+                        <div class="space-y-2.5">
+                            {% for teacher in teachers %}
+                            <label class="flex items-center gap-2.5 text-sm cursor-pointer group">
+                                <input type="checkbox" name="docente" value="{{ teacher.id }}"
+                                    class="w-4 h-4 rounded accent-primary cursor-pointer shrink-0"
+                                    {% if teacher.id in selected.teachers %}checked{% endif %} />
+                                <span class="text-text-secondary font-semibold group-hover:text-primary transition-colors truncate">{{ teacher.full_name }}</span>
+                                <span class="ml-auto text-xs text-text-muted">{{ teacher.total }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="h-px bg-gray-100"></div>
+
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-text-muted mb-3">Duración</p>
+                        <div class="space-y-2.5">
+                            <label class="flex items-center gap-2.5 text-sm cursor-pointer group">
+                                <input type="radio" name="duracion" value=""
+                                    class="w-4 h-4 accent-primary cursor-pointer shrink-0"
+                                    {% if not selected.duration %}checked{% endif %} />
+                                <span class="text-text-secondary font-semibold group-hover:text-primary transition-colors">Cualquiera</span>
+                            </label>
+                            {% for key, label in duration_buckets %}
+                            <label class="flex items-center gap-2.5 text-sm cursor-pointer group">
+                                <input type="radio" name="duracion" value="{{ key }}"
+                                    class="w-4 h-4 accent-primary cursor-pointer shrink-0"
+                                    {% if selected.duration == key %}checked{% endif %} />
+                                <span class="text-text-secondary font-semibold group-hover:text-primary transition-colors">{{ label }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-gray-100"></div>
+
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-text-muted mb-3">Precio</p>
+                        <div class="space-y-2.5">
+                            <label class="flex items-center gap-2.5 text-sm cursor-pointer group">
+                                <input type="radio" name="precio" value=""
+                                    class="w-4 h-4 accent-primary cursor-pointer shrink-0"
+                                    {% if not selected.price %}checked{% endif %} />
+                                <span class="text-text-secondary font-semibold group-hover:text-primary transition-colors">Cualquiera</span>
+                            </label>
+                            {% for key, label in price_buckets %}
+                            <label class="flex items-center gap-2.5 text-sm cursor-pointer group">
+                                <input type="radio" name="precio" value="{{ key }}"
+                                    class="w-4 h-4 accent-primary cursor-pointer shrink-0"
+                                    {% if selected.price == key %}checked{% endif %} />
+                                <span class="text-text-secondary font-semibold group-hover:text-primary transition-colors">{{ label }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-gray-100"></div>
+
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-text-muted mb-3">Valoración</p>
+                        <div class="space-y-2.5">
+                            <label class="flex items-center gap-2.5 text-sm cursor-pointer group">
+                                <input type="radio" name="valoracion" value=""
+                                    class="w-4 h-4 accent-primary cursor-pointer shrink-0"
+                                    {% if not selected.rating %}checked{% endif %} />
+                                <span class="text-text-secondary font-semibold group-hover:text-primary transition-colors">Cualquiera</span>
+                            </label>
+                            {% for value, label in rating_choices %}
+                            <label class="flex items-center gap-2.5 text-sm cursor-pointer group">
+                                <input type="radio" name="valoracion" value="{{ value }}"
+                                    class="w-4 h-4 accent-primary cursor-pointer shrink-0"
+                                    {% if selected.rating == value %}checked{% endif %} />
+                                <span class="flex items-center gap-1.5 text-text-secondary font-semibold group-hover:text-primary transition-colors">
+                                    <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/star.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-yellow-400"></span>
+                                    {{ label }}
+                                </span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {# Sin JS el filtro sigue funcionando con este botón. #}
+                    <button type="submit"
+                        class="w-full bg-btn-primary text-btn-primary-text font-semibold py-2.5 rounded-lg hover:bg-purple-900 transition-colors cursor-pointer">
+                        Aplicar filtros
+                    </button>
+                </div>
+            </aside>
+        </div>
+
         <div class="md:w-4/5">
-            <p class="text-5xl font-bold mb-2">Catálogo Maestro</p>
-            <p class="text-sm font-bold text-text-secondary mb-10">
+            <p class="text-4xl md:text-5xl font-bold mb-2">Catálogo Maestro</p>
+            <p class="text-sm font-bold text-text-secondary mb-8 max-w-2xl">
                 Programas cuidadosamente diseñados para impulsar tus habilidades
                 técnicas y creativas, y llevar tu carrera al siguiente nivel.
             </p>
 
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+                <p class="text-sm font-semibold text-text-secondary">
+                    <span class="text-text font-bold">{{ courses|length }}</span>
+                    {% if courses|length == 1 %}curso{% else %}cursos{% endif %}
+                    {% if active_filters %}de {{ total_courses }}{% endif %}
+                    {% if selected.q %}para &laquo;{{ selected.q }}&raquo;{% endif %}
+                </p>
+
+                <label class="flex items-center gap-2 text-sm">
+                    <span class="text-text-muted font-semibold shrink-0">Ordenar por</span>
+                    <select name="orden"
+                        class="bg-white rounded-lg shadow px-3 py-2 font-semibold text-text outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer">
+                        {% for key, label in sort_options %}
+                        <option value="{{ key }}" {% if selected.sort == key %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+
             {% if courses %}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 font-headline items-stretch">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 font-headline items-stretch">
                 {% for course in courses %}
                 <div class="rounded-xl shadow flex flex-col h-full transition-transform duration-300 hover:scale-102 hover:translate-y-0.5">
                     <img src="{{ course.image_url }}" class="w-full h-48 object-cover rounded-t-lg shrink-0" alt="{{ course.title }}" />
@@ -29,11 +202,15 @@
                                 <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/clock.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text"></span>
                                 <p>{{ course.duration }}</p>
                             </div>
+                            <div class="flex items-center gap-1 text-text">
+                                <span class="inline-block w-4 h-4 [mask-image:url('{% static "icons/star.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-yellow-400"></span>
+                                <p class="font-semibold">{{ course.rating }}</p>
+                            </div>
                         </div>
                         <h3 class="text-2xl font-bold text-text mb-2">{{ course.title }}</h3>
                         <p class="text-sm font-bold text-text-secondary mb-4 line-clamp-2">{{ course.description }}</p>
 
-                        <div class="h-0.5 bg-gray-100 text-2xl"></div>
+                        <div class="h-0.5 bg-gray-100 text-2xl mt-auto"></div>
                         <div class="flex justify-between items-center mt-5">
                             <div class="flex gap-2 font-semibold">
                                 <p class="line-through">${{ course.price|intcomma }}</p>
@@ -46,12 +223,36 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div class="p-6 rounded-2xl flex flex-col items-center py-20">
+            <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center py-20">
                 <span class="inline-block w-10 h-10 mb-3 [mask-image:url('{% static "icons/book-marked.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+                {% if active_filters %}
+                <p class="text-lg font-semibold mb-2 text-center text-text">Ningún curso coincide con esos filtros</p>
+                <p class="text-sm text-text-secondary mb-5 text-center max-w-sm">
+                    Prueba con menos filtros o busca por otro tema, tecnología o docente.
+                </p>
+                <a href="{% url 'course_list' %}"
+                    class="bg-btn-primary text-btn-primary-text font-semibold px-6 py-2.5 rounded-lg hover:bg-purple-900 transition-colors">
+                    Limpiar filtros
+                </a>
+                {% else %}
                 <p class="text-lg font-semibold mb-2 text-center text-text">No hay cursos disponibles</p>
+                {% endif %}
             </div>
             {% endif %}
         </div>
-    </div>
+    </form>
 </div>
+
+<script>
+// Los filtros se aplican al vuelo; el botón "Aplicar" queda como respaldo sin JS.
+(function () {
+    const form = document.getElementById("course-filters");
+    if (!form) return;
+
+    form.addEventListener("change", function (event) {
+        if (event.target.id === "filters-toggle") return;  // el toggle móvil no filtra
+        form.requestSubmit();
+    });
+})();
+</script>
 {% endblock %}

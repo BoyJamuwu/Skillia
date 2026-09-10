@@ -1,7 +1,15 @@
+import re
+
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from teachers.models import Teacher
+
+
+def parse_hours(text):
+    """Primer número de una duración escrita a mano ("12 horas" -> 12). None si no hay."""
+    match = re.search(r"\d+", text or "")
+    return int(match.group()) if match else None
 
 
 class Course(models.Model):
@@ -22,6 +30,11 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def duration_hours(self):
+        """Horas del curso como número, para poder agruparlas por tramos en el filtro."""
+        return parse_hours(self.duration)
 
 
 class Module(models.Model):
