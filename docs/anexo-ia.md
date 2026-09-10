@@ -15,7 +15,7 @@ recibió y qué se revisó o modificó después.
 | --- | --- |
 | Herramienta | Claude Code (Anthropic), modelo Claude Opus 5 |
 | Modalidad | Asistente de línea de comandos con acceso al repositorio local |
-| Integrante que la utilizó | Matías Alberto |
+| Integrante que la utilizó | Matias Garcia |
 | Fecha | 2026-09-09 |
 
 ---

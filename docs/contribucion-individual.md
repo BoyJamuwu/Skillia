@@ -10,12 +10,12 @@
 
 | Integrante | Usuario Git | Commits | Líneas aportadas (código, plantillas y datos) |
 | --- | --- | --- | --- |
-| _(completar nombre)_ | `BoyJamuwu` | 1 | +1.412 |
-| Matías Alberto | `matiudev` | 4 | +1.955 / −46 |
+| Emilio Asencio | `BoyJamuwu` | 1 | +1.412 |
+| Matias Garcia | `matiudev` | 4 | +1.955 / −46 |
 
 ---
 
-## Integrante 1 — _(completar nombre)_
+## Integrante 1 — Emilio Asencio
 
 **Aporte principal:** estructura base del proyecto y flujo del estudiante.
 
@@ -42,7 +42,7 @@
 
 ---
 
-## Integrante 2 — Matías Alberto
+## Integrante 2 — Matias Garcia
 
 **Aporte principal:** cuerpo docente, navegación, carga de datos y filtros del catálogo.
 
