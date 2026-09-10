@@ -10,22 +10,60 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+def load_env(path):
+    """Carga las variables de un archivo .env en os.environ.
+
+    Se usa setdefault a propósito: si la variable ya viene del entorno del
+    sistema (por ejemplo en un despliegue), esa tiene prioridad sobre el archivo.
+    """
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
+def get_env(name, default=None, required=False):
+    """Lee una variable de entorno y falla con un mensaje claro si es obligatoria."""
+    value = os.environ.get(name, default)
+    if required and not value:
+        raise ImproperlyConfigured(
+            f"Falta la variable {name}. Copia .env.example como .env y complétala "
+            f"(ver README.md)."
+        )
+    return value
+
+
+load_env(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z6k(ltd2wzs$kufy2+jek$3l6zotj==*v_rf#7yzeq3c%0f81$'
+# La clave vive en .env, que no se versiona: el repositorio no expone secretos.
+SECRET_KEY = get_env("DJANGO_SECRET_KEY", required=True)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = get_env("DJANGO_DEBUG", "False").lower() in ("1", "true", "yes", "on")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in get_env("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+    if host.strip()
+]
 
 
 # Application definition
