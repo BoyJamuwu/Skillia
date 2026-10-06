@@ -21,7 +21,11 @@
 
         {% if request.user.is_authenticated %}
         <div class="hidden lg:flex gap-6 items-center">
+            {% if request.user.teacher_profile %}
+            <a href="{% url 'teacher_panel' %}" class="text-secondary font-semibold font-headline">Panel Docente</a>
+            {% else %}
             <a href="{% url 'dashboard' %}" class="text-secondary font-semibold font-headline">Dashboard</a>
+            {% endif %}
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="flex gap-1 items-center text-red-500 font-bold hover:cursor-pointer hover:text-red-700">
@@ -47,7 +51,11 @@
         <button type="button" data-modal-open="modal-nosotros" class="text-text-muted font-semibold text-left">Quiénes Somos</button>
         <button type="button" data-modal-open="modal-institucion" class="text-text-muted font-semibold text-left">Institución</button>
         {% if request.user.is_authenticated %}
+        {% if request.user.teacher_profile %}
+        <a href="{% url 'teacher_panel' %}" class="text-secondary font-semibold">Panel Docente</a>
+        {% else %}
         <a href="{% url 'dashboard' %}" class="text-secondary font-semibold">Dashboard</a>
+        {% endif %}
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit" class="flex gap-1 items-center text-red-500 font-bold text-left">

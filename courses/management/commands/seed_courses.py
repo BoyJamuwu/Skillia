@@ -14,7 +14,8 @@ import json
 from pathlib import Path
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import transaction
+from django.core.management.color import no_style
+from django.db import connection, transaction
 from django.utils.dateparse import parse_datetime
 
 from courses.models import Course, Lesson, Module, Progress
@@ -52,7 +53,19 @@ class Command(BaseCommand):
         if options["prune"]:
             self.prune_courses({c["id"] for c in catalog["courses"]})
 
+        self.reset_sequences()
         self.report(catalog)
+
+    def reset_sequences(self):
+        """Pone al día el contador de ids después de insertar filas con id fijo.
+
+        PostgreSQL no lo mueve solo: sin esto, el próximo curso, módulo o lección
+        creado desde el panel recibiría un id que ya existe. En SQLite no hace nada.
+        """
+        statements = connection.ops.sequence_reset_sql(no_style(), [Course, Module, Lesson])
+        with connection.cursor() as cursor:
+            for sql in statements:
+                cursor.execute(sql)
 
     def load_courses(self, rows):
         created = updated = 0

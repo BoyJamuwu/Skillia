@@ -1,7 +1,17 @@
+from django.conf import settings
 from django.db import models
 
 
 class Teacher(models.Model):
+    # Cuenta con la que el docente entra al panel. Sin cuenta, el docente solo
+    # existe como ficha pública; con cuenta, el usuario tiene el rol de Profesor.
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        related_name="teacher_profile",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
     full_name = models.CharField(max_length=200)
     headline = models.CharField(max_length=200, blank=True)
     specialty = models.CharField(max_length=100, blank=True)

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static humanize %}
+{% block title %}Panel Docente - Skillia{% endblock %}
+
+{% block content %}
+<div class="bg-[#f0f3f8] px-4 sm:px-8 md:px-20 lg:px-36 pb-20 pt-6 font-headline overflow-x-hidden min-h-screen">
+    {% include "partials/header_landing.html" %}
+
+    {% include "teachers/panel/_messages.html" %}
+
+    <section class="pt-10 pb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+        <div>
+            <p class="text-primary font-bold">Panel Docente</p>
+            <h4 class="text-text text-4xl font-bold">Hola, {{ teacher.full_name }} 👋</h4>
+            <p class="text-text-secondary">Desde aquí gestionas tus cursos, módulos y lecciones.</p>
+        </div>
+        <a href="{% url 'panel_course_create' %}"
+            class="bg-primary text-center rounded-xl px-5 py-3 text-white font-semibold hover:bg-purple-900 transition-colors whitespace-nowrap">
+            + Nuevo curso
+        </a>
+    </section>
+
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        <div class="bg-white rounded-2xl p-5">
+            <p class="text-3xl font-bold text-primary">{{ totals.courses }}</p>
+            <p class="text-xs text-text-muted uppercase tracking-wider mt-1">Cursos</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5">
+            <p class="text-3xl font-bold text-primary">{{ totals.modules }}</p>
+            <p class="text-xs text-text-muted uppercase tracking-wider mt-1">Módulos</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5">
+            <p class="text-3xl font-bold text-primary">{{ totals.lessons }}</p>
+            <p class="text-xs text-text-muted uppercase tracking-wider mt-1">Lecciones</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5">
+            <p class="text-3xl font-bold text-primary">{{ totals.students|intcomma }}</p>
+            <p class="text-xs text-text-muted uppercase tracking-wider mt-1">Estudiantes</p>
+        </div>
+    </section>
+
+    <section>
+        <p class="text-text text-4xl font-bold mb-8">Mis Cursos</p>
+
+        {% if courses %}
+        <div class="gap-8 flex flex-col">
+            {% for course in courses %}
+            <section class="bg-white rounded-2xl p-5 md:p-7 flex flex-col sm:flex-row gap-5 sm:gap-6 items-start sm:items-center justify-between">
+                <div class="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full sm:w-auto min-w-0">
+                    {% if course.image_url %}
+                    <img src="{{ course.image_url }}" alt="{{ course.title }}"
+                        class="w-full sm:w-48 md:w-64 h-44 sm:h-36 md:h-40 rounded-xl object-cover shrink-0" />
+                    {% else %}
+                    <div class="w-full sm:w-48 md:w-64 h-44 sm:h-36 md:h-40 rounded-xl bg-[#f0f3f8] shrink-0 flex items-center justify-center">
+                        <span class="inline-block w-10 h-10 [mask-image:url('{% static "icons/book-marked.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+                    </div>
+                    {% endif %}
+
+                    <div class="flex flex-col justify-center gap-2 min-w-0">
+                        <p class="text-xs text-primary font-bold uppercase tracking-wider">{{ course.category }}</p>
+                        <p class="text-lg md:text-xl lg:text-2xl font-semibold text-text truncate">{{ course.title }}</p>
+                        <p class="text-sm text-text-secondary">
+                            {{ course.modules_count }} módulo{{ course.modules_count|pluralize }} ·
+                            {{ course.lessons_count }} lecci{{ course.lessons_count|pluralize:"ón,ones" }} ·
+                            {{ course.students_count }} estudiante{{ course.students_count|pluralize }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="w-full sm:w-auto shrink-0 flex flex-col gap-2">
+                    <a href="{% url 'panel_course_manage' course.pk %}"
+                        class="bg-primary block text-center rounded-xl px-5 py-3 text-white font-semibold hover:bg-purple-900 transition-colors whitespace-nowrap">
+                        Gestionar contenido →
+                    </a>
+                    <a href="{% url 'course_detail' course.pk %}"
+                        class="block text-center bg-btn-secondary text-btn-secondary-text rounded-xl px-5 py-2 font-semibold hover:bg-indigo-100 transition-colors whitespace-nowrap">
+                        Ver ficha pública
+                    </a>
+                </div>
+            </section>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="py-20 flex flex-col items-center text-center gap-4">
+            <span class="inline-block w-10 h-10 [mask-image:url('{% static "icons/book-marked.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] bg-text-muted"></span>
+            <p class="text-lg font-semibold text-text">Todavía no tienes cursos</p>
+            <a href="{% url 'panel_course_create' %}" class="text-primary font-bold">Crea el primero →</a>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

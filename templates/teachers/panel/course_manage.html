@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static humanize %}
+{% block title %}{{ course.title }} - Panel Docente{% endblock %}
+
+{% block content %}
+<div class="bg-[#f0f3f8] px-4 sm:px-8 md:px-20 lg:px-36 pb-20 pt-6 font-headline overflow-x-hidden min-h-screen">
+    {% include "partials/header_landing.html" %}
+
+    {% include "teachers/panel/_messages.html" %}
+
+    <section class="pt-10 pb-8">
+        <a href="{% url 'teacher_panel' %}" class="text-primary font-bold">← Volver al panel</a>
+    </section>
+
+    <section class="bg-white rounded-2xl p-5 md:p-7 flex flex-col md:flex-row gap-6 justify-between mb-10">
+        <div class="min-w-0">
+            <p class="text-xs text-primary font-bold uppercase tracking-wider">{{ course.category }}</p>
+            <h4 class="text-text text-3xl font-bold mt-1">{{ course.title }}</h4>
+            <p class="text-text-secondary mt-2 line-clamp-3">{{ course.description }}</p>
+            <p class="text-sm text-text-muted mt-3">
+                ${{ course.price|floatformat:0|intcomma }}
+                {% if course.duration %} · {{ course.duration }}{% endif %}
+                · {{ students_count }} estudiante{{ students_count|pluralize }} inscrito{{ students_count|pluralize }}
+            </p>
+        </div>
+        <div class="flex flex-col gap-2 shrink-0">
+            <a href="{% url 'panel_course_edit' course.pk %}"
+                class="bg-btn-secondary text-btn-secondary-text text-center rounded-xl px-5 py-2.5 font-semibold hover:bg-indigo-100 transition-colors whitespace-nowrap">
+                Editar datos del curso
+            </a>
+            <a href="{% url 'course_detail' course.pk %}"
+                class="text-center text-text-muted font-semibold px-5 py-2 hover:text-primary transition-colors whitespace-nowrap">
+                Ver ficha pública
+            </a>
+        </div>
+    </section>
+
+    <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <p class="text-text text-3xl font-bold">Contenido</p>
+        <a href="{% url 'panel_module_create' course.pk %}"
+            class="bg-primary text-center rounded-xl px-5 py-3 text-white font-semibold hover:bg-purple-900 transition-colors whitespace-nowrap">
+            + Agregar módulo
+        </a>
+    </section>
+
+    {% if modules %}
+    <div class="flex flex-col gap-6">
+        {% for module in modules %}
+        <section class="bg-white rounded-2xl overflow-hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 md:px-7 py-4 border-b border-slate-200">
+                <div class="min-w-0">
+                    <p class="text-xs text-text-muted uppercase tracking-wider">Módulo {{ module.order }}</p>
+                    <p class="text-lg font-semibold text-text truncate">{{ module.title }}</p>
+                </div>
+                <div class="flex gap-4 text-sm font-semibold shrink-0">
+                    <a href="{% url 'panel_lesson_create' module.pk %}" class="text-primary hover:text-purple-900">+ Lección</a>
+                    <a href="{% url 'panel_module_edit' module.pk %}" class="text-text-muted hover:text-primary">Editar</a>
+                    <a href="{% url 'panel_module_delete' module.pk %}" class="text-red-500 hover:text-red-700">Eliminar</a>
+                </div>
+            </div>
+
+            {% with lessons=module.lessons.all %}
+            {% if lessons %}
+            <ul class="divide-y divide-slate-100">
+                {% for lesson in lessons %}
+                <li class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-5 md:px-7 py-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <span class="inline-block w-4 h-4 shrink-0 [mask-image:url('{% static "icons/circle-play.svg" %}')] [mask-size:contain] [mask-repeat:no-repeat] {% if lesson.video_url %}bg-primary{% else %}bg-text-muted{% endif %}"></span>
+                        <p class="text-text truncate">{{ lesson.order }}. {{ lesson.title }}</p>
+                        {% if lesson.duration %}<span class="text-xs text-text-muted shrink-0">{{ lesson.duration }}</span>{% endif %}
+                        {% if not lesson.video_url %}<span class="text-xs text-amber-600 shrink-0">sin video</span>{% endif %}
+                    </div>
+                    <div class="flex gap-4 text-sm font-semibold shrink-0">
+                        <a href="{% url 'panel_lesson_edit' lesson.pk %}" class="text-text-muted hover:text-primary">Editar</a>
+                        <a href="{% url 'panel_lesson_delete' lesson.pk %}" class="text-red-500 hover:text-red-700">Eliminar</a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="px-5 md:px-7 py-4 text-sm text-text-muted">
+                Este módulo aún no tiene lecciones.
+                <a href="{% url 'panel_lesson_create' module.pk %}" class="text-primary font-semibold">Agrega la primera →</a>
+            </p>
+            {% endif %}
+            {% endwith %}
+        </section>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="py-16 flex flex-col items-center text-center gap-3 bg-white rounded-2xl">
+        <p class="text-lg font-semibold text-text">El curso todavía no tiene módulos</p>
+        <a href="{% url 'panel_module_create' course.pk %}" class="text-primary font-bold">Agrega el primer módulo →</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

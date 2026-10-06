@@ -1,0 +1,9 @@
+{% if messages %}
+<div class="flex flex-col gap-2 mt-6">
+    {% for message in messages %}
+    <p class="rounded-xl px-5 py-3 font-semibold {% if message.tags == 'success' %}bg-green-50 text-green-700{% else %}bg-red-50 text-red-700{% endif %}">
+        {{ message }}
+    </p>
+    {% endfor %}
+</div>
+{% endif %}

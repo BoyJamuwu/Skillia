@@ -7,8 +7,10 @@ como para poblar la pantalla de Docentes con datos de prueba.
 
     python manage.py seed_teachers
     python manage.py seed_teachers --assign-courses
+    python manage.py seed_teachers --create-users --password profesor123
 """
 
+from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
@@ -127,6 +129,16 @@ class Command(BaseCommand):
             action="store_true",
             help="Asigna un docente a los cursos que hayan quedado sin uno.",
         )
+        parser.add_argument(
+            "--create-users",
+            action="store_true",
+            help="Crea (o vincula) una cuenta de Profesor para cada docente, usando su email.",
+        )
+        parser.add_argument(
+            "--password",
+            default="profesor123",
+            help="Contraseña de las cuentas nuevas creadas con --create-users.",
+        )
 
     @transaction.atomic
     def handle(self, *args, **options):
@@ -154,6 +166,29 @@ class Command(BaseCommand):
 
         if options["assign_courses"]:
             self.assign_courses()
+
+        if options["create_users"]:
+            self.create_users(options["password"])
+
+    def create_users(self, password):
+        """Una cuenta por docente (usuario = email). Las cuentas que ya existen no se tocan."""
+        User = get_user_model()
+        for teacher in Teacher.objects.exclude(email=""):
+            user, created = User.objects.get_or_create(
+                username=teacher.email,
+                defaults={"email": teacher.email, "first_name": teacher.full_name},
+            )
+            if created:
+                user.set_password(password)
+                user.save(update_fields=["password"])
+            if teacher.user_id != user.id:
+                teacher.user = user
+                teacher.save(update_fields=["user"])
+            status = "cuenta creada" if created else "cuenta existente"
+            self.stdout.write(f"  {teacher.full_name} -> {user.username} ({status})")
+        self.stdout.write(
+            self.style.SUCCESS(f"Cuentas de profesor listas. Contraseña de las nuevas: {password}")
+        )
 
     def assign_courses(self):
         """Reparte los cursos huérfanos, prefiriendo un docente de la misma categoría."""

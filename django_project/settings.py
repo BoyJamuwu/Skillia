@@ -115,12 +115,59 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# El motor se elige con DB_ENGINE en .env. PostgreSQL es la base del proyecto;
+# SQLite queda como respaldo para quien todavía no tenga Postgres instalado.
+DB_ENGINE = get_env("DB_ENGINE", "postgres").lower()
+
+def add_libpq_to_path():
+    """En Windows, deja la libpq de PostgreSQL al alcance del driver psycopg.
+
+    Smart App Control suele bloquear la libpq que trae psycopg[binary]; la que
+    instala PostgreSQL sí se puede cargar, pero el driver solo la encuentra si su
+    carpeta está en el PATH. Se usa PG_BIN_DIR si está en .env y, si no, la
+    versión más nueva instalada en Program Files. Así no depende de que la
+    terminal se haya reabierto después de instalar PostgreSQL.
+    """
+    if os.name != "nt":
+        return
+    bin_dir = get_env("PG_BIN_DIR")
+    if not bin_dir:
+        root = Path(os.environ.get("ProgramFiles", r"C:\Program Files")) / "PostgreSQL"
+        candidates = sorted(
+            (p for p in root.glob("*/bin") if (p / "libpq.dll").exists()),
+            key=lambda p: int(p.parent.name) if p.parent.name.isdigit() else 0,
+        )
+        bin_dir = str(candidates[-1]) if candidates else None
+    if bin_dir and bin_dir.lower() not in os.environ.get("PATH", "").lower():
+        os.environ["PATH"] = bin_dir + os.pathsep + os.environ.get("PATH", "")
+
+
+if DB_ENGINE == "postgres":
+    add_libpq_to_path()
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': get_env("DB_NAME", required=True),
+            'USER': get_env("DB_USER", required=True),
+            'PASSWORD': get_env("DB_PASSWORD", required=True),
+            'HOST': get_env("DB_HOST", "localhost"),
+            'PORT': get_env("DB_PORT", "5432"),
+            # Reutiliza la conexión entre requests en vez de abrir una nueva cada vez.
+            'CONN_MAX_AGE': int(get_env("DB_CONN_MAX_AGE", "60")),
+            'CONN_HEALTH_CHECKS': True,
+        }
     }
-}
+elif DB_ENGINE == "sqlite":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    raise ImproperlyConfigured(
+        f"DB_ENGINE={DB_ENGINE!r} no es válido. Usa 'postgres' o 'sqlite' (ver README.md)."
+    )
 
 
 # Password validation

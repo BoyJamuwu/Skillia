@@ -10,7 +10,7 @@
       "duration": "12 horas",
       "category": "Desarrollo Web",
       "created_at": "2026-04-05 15:22:43.139939+00",
-      "instructor": "Fernando Reveco"
+      "instructor": "Valentina Soto"
     },
     {
       "id": 2,
@@ -34,7 +34,7 @@
       "duration": "8 horas",
       "category": "Diseño",
       "created_at": "2026-04-05 16:21:52.241946+00",
-      "instructor": "Fernando Reveco"
+      "instructor": "Camila Fuentes"
     },
     {
       "id": 4,
@@ -46,7 +46,7 @@
       "duration": "14 horas",
       "category": "Programación",
       "created_at": "2026-04-05 16:21:52.241946+00",
-      "instructor": "Fernando Reveco"
+      "instructor": "Andrés Villalobos"
     },
     {
       "id": 5,
@@ -70,7 +70,7 @@
       "duration": "9 horas",
       "category": "DevOps",
       "created_at": "2026-04-05 16:21:52.241946+00",
-      "instructor": "Fernando Reveco"
+      "instructor": "Matías Aguirre"
     }
   ],
   "modules": [

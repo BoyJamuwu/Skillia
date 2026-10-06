@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from .forms import EmailUserCreationForm
@@ -13,6 +14,12 @@ class SignUpView(CreateView):
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "dashboard.html"
+
+    def get(self, request, *args, **kwargs):
+        # Los docentes no tienen Dashboard de estudiante: van a su panel.
+        if getattr(request.user, "teacher_profile", None):
+            return redirect("teacher_panel")
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

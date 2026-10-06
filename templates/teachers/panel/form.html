@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} - Panel Docente{% endblock %}
+
+{% block content %}
+<div class="bg-[#f0f3f8] px-4 sm:px-8 md:px-20 lg:px-36 pb-20 pt-6 font-headline overflow-x-hidden min-h-screen">
+    {% include "partials/header_landing.html" %}
+
+    <section class="pt-10 pb-8">
+        <a href="{{ back_url }}" class="text-primary font-bold">← Volver</a>
+        <h4 class="text-text text-3xl font-bold mt-4">{{ page_title }}</h4>
+    </section>
+
+    <form method="post" class="bg-white rounded-2xl p-6 md:p-10 max-w-3xl flex flex-col gap-6" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <p class="text-red-600 font-bold">{{ form.non_field_errors|join:" " }}</p>
+        {% endif %}
+
+        {% for field in form %}
+        <div class="flex flex-col gap-2">
+            <label for="{{ field.id_for_label }}" class="text-text-muted text-sm font-bold uppercase">
+                {{ field.label }}{% if field.field.required %} *{% endif %}
+            </label>
+            {{ field }}
+            {% if field.help_text %}<p class="text-xs text-text-muted">{{ field.help_text }}</p>{% endif %}
+            {% for error in field.errors %}<p class="text-sm text-red-600 font-semibold">{{ error }}</p>{% endfor %}
+        </div>
+        {% endfor %}
+
+        <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
+            <a href="{{ back_url }}"
+                class="text-center bg-btn-secondary text-btn-secondary-text font-semibold px-6 py-3 rounded-xl hover:bg-indigo-100 transition-colors">
+                Cancelar
+            </a>
+            <button type="submit"
+                class="bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-purple-900 transition-colors cursor-pointer">
+                Guardar
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
