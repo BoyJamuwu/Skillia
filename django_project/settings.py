@@ -115,10 +115,6 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# El motor se elige con DB_ENGINE en .env. PostgreSQL es la base del proyecto;
-# SQLite queda como respaldo para quien todavía no tenga Postgres instalado.
-DB_ENGINE = get_env("DB_ENGINE", "postgres").lower()
-
 def add_libpq_to_path():
     """En Windows, deja la libpq de PostgreSQL al alcance del driver psycopg.
 
@@ -142,32 +138,20 @@ def add_libpq_to_path():
         os.environ["PATH"] = bin_dir + os.pathsep + os.environ.get("PATH", "")
 
 
-if DB_ENGINE == "postgres":
-    add_libpq_to_path()
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': get_env("DB_NAME", required=True),
-            'USER': get_env("DB_USER", required=True),
-            'PASSWORD': get_env("DB_PASSWORD", required=True),
-            'HOST': get_env("DB_HOST", "localhost"),
-            'PORT': get_env("DB_PORT", "5432"),
-            # Reutiliza la conexión entre requests en vez de abrir una nueva cada vez.
-            'CONN_MAX_AGE': int(get_env("DB_CONN_MAX_AGE", "60")),
-            'CONN_HEALTH_CHECKS': True,
-        }
+add_libpq_to_path()
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': get_env("DB_NAME", required=True),
+        'USER': get_env("DB_USER", required=True),
+        'PASSWORD': get_env("DB_PASSWORD", required=True),
+        'HOST': get_env("DB_HOST", "localhost"),
+        'PORT': get_env("DB_PORT", "5432"),
+        # Reutiliza la conexión entre requests en vez de abrir una nueva cada vez.
+        'CONN_MAX_AGE': int(get_env("DB_CONN_MAX_AGE", "60")),
+        'CONN_HEALTH_CHECKS': True,
     }
-elif DB_ENGINE == "sqlite":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    raise ImproperlyConfigured(
-        f"DB_ENGINE={DB_ENGINE!r} no es válido. Usa 'postgres' o 'sqlite' (ver README.md)."
-    )
+}
 
 
 # Password validation

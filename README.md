@@ -6,9 +6,6 @@ asignatura **Programación Back End (TI2041)**.
 El catálogo permite explorar cursos con filtros, revisar el detalle de cada programa,
 inscribirse y avanzar lección por lección desde un reproductor con seguimiento de progreso.
 
-La definición del proyecto (problemática, objetivo, usuarios, alcance y proyección) está en
-[`docs/proyecto-ua1.md`](docs/proyecto-ua1.md).
-
 ---
 
 ## Requisitos
@@ -16,8 +13,7 @@ La definición del proyecto (problemática, objetivo, usuarios, alcance y proyec
 - Python 3.10 – 3.14 (el proyecto se desarrolló con 3.13)
 - pip
 - Git
-- PostgreSQL 14 o superior (ver [Base de datos](#base-de-datos-postgresql)). Para probar
-  sin instalarlo se puede usar SQLite con `DB_ENGINE=sqlite`.
+- PostgreSQL 14 o superior (ver [Base de datos](#base-de-datos-postgresql)).
 
 ## Instalación
 
@@ -53,10 +49,9 @@ Django se detiene con un mensaje que indica exactamente qué completar.
 | `DJANGO_SECRET_KEY` | Clave criptográfica de Django. Obligatoria. | — |
 | `DJANGO_DEBUG` | Modo depuración. `False` en producción. | `False` |
 | `DJANGO_ALLOWED_HOSTS` | Hosts autorizados, separados por coma. | `127.0.0.1,localhost` |
-| `DB_ENGINE` | `postgres` o `sqlite`. | `postgres` |
-| `DB_NAME` | Nombre de la base. Obligatoria con Postgres. | — |
-| `DB_USER` | Usuario de la base. Obligatoria con Postgres. | — |
-| `DB_PASSWORD` | Contraseña del usuario. Obligatoria con Postgres. | — |
+| `DB_NAME` | Nombre de la base. Obligatoria. | — |
+| `DB_USER` | Usuario de la base. Obligatoria. | — |
+| `DB_PASSWORD` | Contraseña del usuario. Obligatoria. | — |
 | `DB_HOST` | Servidor de la base. | `localhost` |
 | `DB_PORT` | Puerto de la base. | `5432` |
 | `PG_BIN_DIR` | Solo Windows: carpeta `bin` de PostgreSQL. Se detecta sola si está en Program Files. | — |
@@ -80,25 +75,11 @@ CREATE DATABASE skillia OWNER skillia;
 ALTER USER skillia CREATEDB;  -- necesario para que `manage.py test` cree su base de pruebas
 ```
 
-**3. Completar `.env`** con esos datos (`DB_ENGINE=postgres`, `DB_NAME=skillia`,
+**3. Completar `.env`** con esos datos (`DB_NAME=skillia`,
 `DB_USER=skillia`, `DB_PASSWORD=una-clave-segura`) y seguir con la
 [Puesta en marcha](#puesta-en-marcha).
 
 Para comprobar la conexión: `python manage.py dbshell` abre la consola de la base.
-
-### Pasar los datos de SQLite a PostgreSQL
-
-Todo el catálogo sale de los comandos `seed_*`, así que basta con correrlos sobre la base
-nueva. Si además quieres conservar las cuentas e inscripciones creadas a mano:
-
-```bash
-# Con DB_ENGINE=sqlite en .env
-python manage.py dumpdata --natural-foreign --exclude contenttypes --exclude auth.permission --exclude admin.logentry --exclude sessions -o datos.json
-
-# Cambiar a DB_ENGINE=postgres y crear las tablas vacías
-python manage.py migrate
-python manage.py loaddata datos.json
-```
 
 ### Problemas frecuentes
 
@@ -224,6 +205,5 @@ Los valores inválidos se ignoran sin interrumpir la navegación.
 
 ## Documentación del proyecto
 
-- [`docs/proyecto-ua1.md`](docs/proyecto-ua1.md) — problemática, objetivo, usuarios, alcance y proyección.
 - [`docs/contribucion-individual.md`](docs/contribucion-individual.md) — aporte de cada integrante.
 - [`docs/anexo-ia.md`](docs/anexo-ia.md) — anexo de uso de herramientas de inteligencia artificial.

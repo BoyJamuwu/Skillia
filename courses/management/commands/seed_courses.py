@@ -60,7 +60,7 @@ class Command(BaseCommand):
         """Pone al día el contador de ids después de insertar filas con id fijo.
 
         PostgreSQL no lo mueve solo: sin esto, el próximo curso, módulo o lección
-        creado desde el panel recibiría un id que ya existe. En SQLite no hace nada.
+        creado desde el panel recibiría un id que ya existe.
         """
         statements = connection.ops.sequence_reset_sql(no_style(), [Course, Module, Lesson])
         with connection.cursor() as cursor:

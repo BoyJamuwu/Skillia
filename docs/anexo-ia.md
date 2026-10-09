@@ -69,7 +69,7 @@ _(Completar: qué revisó cada integrante, qué se modificó a mano y qué se de
 ### Tipo de apoyo recibido
 
 - Lectura del instrumento de evaluación y contraste con el estado real del repositorio.
-- Redacción de `README.md`, `docs/proyecto-ua1.md`, `docs/contribucion-individual.md` y de
+- Redacción de `README.md`, `docs/contribucion-individual.md` y de
   este anexo, a partir del código existente y del historial de Git.
 - Refactor de `django_project/settings.py` para leer `SECRET_KEY`, `DEBUG` y `ALLOWED_HOSTS`
   desde variables de entorno, con la función `load_env()` y `get_env()`.
